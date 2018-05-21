@@ -104,3 +104,24 @@ for epoch in range(epoch): ## loop over the dataset # epoch times
     test()
 #print('saving model...')
 #torch.save(model.state_dict(), PATH)
+
+### Plotting the prediction and images from test set
+dataiter = iter(test_loader)
+images, labels = dataiter.next()
+    
+## Press ctrl-c to exit
+for i in range(batch_size):
+    # make prediction
+    outputs = model(images)
+    _, predicted = torch.max(outputs, 1)
+    
+    print(i, 'th plot')
+    print('GroundTruth: ', classes[labels[i]])
+    print('predicted: ', classes[predicted[i]])
+    print()
+    
+    # Print the images
+    imshow(torchvision.utils.make_grid(images[i]))
+    plt.xlabel('GroundTruth: ' + classes[labels[i]])
+    plt.ylabel('Predicted: ' + classes[predicted[i]])
+    plt.show()
