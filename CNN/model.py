@@ -33,5 +33,5 @@ class CNN(nn.Module):
         out = relu2.view(in_size, -1) # flatten the output for Dense layer
 
         out = self.dense(out)
-        return F.log_softmax(out)
+        return out
 

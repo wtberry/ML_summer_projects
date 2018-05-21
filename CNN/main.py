@@ -65,7 +65,7 @@ plt.show()
 ##### Define model, loss function, and optimizer
 model = CNN()
 optimizer = optim.SGD(model.parameters(), lr=lr)
-criterion = nn.NLLLoss()
+criterion = nn.CrossEntropyLoss()
 
 ##### Training
 def train(epoch):
