@@ -67,6 +67,13 @@ model = CNN()
 optimizer = optim.SGD(model.parameters(), lr=lr)
 criterion = nn.CrossEntropyLoss()
 
+## Print out the model info
+print('*'*10, 'Model Info', '*'*10, '\n', model, '\n')
+print('*'*10, 'Training info', '*'*10)
+print('Loss: ', criterion, '\nOptimizer: ', optimizer)
+
+input('Press any key to begin training')
+
 ##### Training
 def train(epoch):
     model.train() # set the model for training mode
