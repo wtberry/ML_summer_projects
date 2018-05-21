@@ -22,7 +22,7 @@ class CNN(nn.Module):
 
     # forward pass
     def forward(self, x):
-        input_size = x.size(0)
+        in_size = x.size(0)
         c1 = self.conv1(x)
         mp1 = self.mp(c1)
         relu1 = F.relu(mp1)
