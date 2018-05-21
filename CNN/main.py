@@ -28,6 +28,9 @@ PATH = '/home/wataru/ML_summer_projects/CNN/save'
 ##### Loading and preparing the fashionMNIST dataset
 
 ## Loading datasets
+
+print('Loading the datasets...')
+
 train_dataset = datasets.FashionMNIST(root='.data/', train=True,
                                         transform=transforms.ToTensor(), download=True)
 
@@ -66,6 +69,13 @@ plt.show()
 model = CNN()
 optimizer = optim.SGD(model.parameters(), lr=lr)
 criterion = nn.NLLLoss()
+
+## Print out the model info
+print('*'*10, 'Model Info', '*'*10, '\n', model, '\n')
+print('*'*10, 'Training info', '*'*10)
+print('Loss: ', criterion, '\nOptimizer: ', optimizer)
+
+input('Press any key to begin training')
 
 ##### Training
 def train(epoch):
