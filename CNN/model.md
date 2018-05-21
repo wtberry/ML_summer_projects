@@ -8,3 +8,7 @@
 
 #### Training tools/parameters
 - Loss: CrossEntropyLoss
+
+#### Result
+- 2 loops on Training set
+- Test acc: 74%
