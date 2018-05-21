@@ -12,12 +12,17 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.autograd import Variable
+import torchvision
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 
 ##### Setting up parameters
 batch_size = 100
 lr = 0.01
 epoch = 2
+img_number = 4
 PATH = '/home/wataru/ML_summer_projects/CNN/save'
 
 ##### Loading and preparing the fashionMNIST dataset
@@ -36,7 +41,27 @@ train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
 test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
                                             batch_size=batch_size, shuffle=False)
 
+# defining class dictionary
+classes = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
+##### Plotting some of the images
+# link: https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
+# create the plot
+def imshow(img):
+    npimg = img.numpy()
+    plt.imshow(np.transpose(npimg, (1, 2, 0)))
+
+# get some random training images
+dataiter = iter(train_loader)
+images, labels = dataiter.next()
+
+# show images
+imshow(torchvision.utils.make_grid(images[:img_number]))
+# print labels
+print(' '.join('%5s' % classes[labels[j]] for j in range(img_number)))
+
+# plot the images
+plt.show()
 ##### Define model, loss function, and optimizer
 model = CNN()
 optimizer = optim.SGD(model.parameters(), lr=lr)
@@ -63,7 +88,7 @@ def test():
     test_loss = 0
     correct = 0
     for data, target in test_loader:
-        data, target = Variable(data, volatile=True) # set Volatile to true, when not running backprop
+        data, target = Variable(data, volatile=True), Variable(target) # set Volatile to true, when not running backprop
         output = model(data)
         test_loss += criterion(output, target).data[0]
         pred = output.data.max(1, keepdim=True)[1]
