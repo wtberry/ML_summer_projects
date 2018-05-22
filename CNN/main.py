@@ -21,8 +21,8 @@ import numpy as np
 ##### Setting up parameters
 batch_size = 100
 lr = 0.01
-epoch = 2
-img_number = 4
+epoch = 5
+img_number = 5
 PATH = '/home/wataru/ML_summer_projects/CNN/save'
 
 ##### Loading and preparing the fashionMNIST dataset
@@ -64,7 +64,7 @@ print(' '.join('%5s' % classes[labels[j]] for j in range(img_number)))
 plt.show()
 ##### Define model, loss function, and optimizer
 model = CNN()
-optimizer = optim.SGD(model.parameters(), lr=lr)
+optimizer = optim.Adagrad(model.parameters(), lr=lr)
 criterion = nn.CrossEntropyLoss()
 
 ## Print out the model info
@@ -106,9 +106,29 @@ def test():
         test_loss, correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
 
+def train_eval():
+    model.eval()
+    train_loss= 0
+    correct = 0
+    for data, target in train_loader:
+        data, target = Variable(data, volatile=True), Variable(target) # set Volatile to true, when not running backprop
+        output = model(data)
+        train_loss += criterion(output, target).data[0]
+        pred = output.data.max(1, keepdim=True)[1]
+        correct += pred.eq(target.data.view_as(pred)).cpu().sum()
+
+    train_loss /= len(train_loader.dataset)
+    print('\nTrain set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
+        train_loss, correct, len(train_loader.dataset),
+        100. * correct / len(train_loader.dataset)))
+
+## Running the training 
+
 for epoch in range(epoch): ## loop over the dataset # epoch times
     train(epoch)
     test()
+
+train_eval()
 #print('saving model...')
 #torch.save(model.state_dict(), PATH)
 
