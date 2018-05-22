@@ -21,3 +21,4 @@
 - Test acc: 84% with filter_num = 20, kernel_size = 3
 - Test acc: 84% with filter_num = 20, kernel_size = 5, 3 C&MP layers
 - Test acc: 88% with filter_num = 50, 35, 20, kernel_size = 3, 3 C&MP layers, leaky_ReLU
+- Test acc: 89% with filter_num = 50, 35, 20, kernel_size = 3, 3 C&MP layers, leaky_ReLU
