@@ -21,7 +21,7 @@ import numpy as np
 ##### Setting up parameters
 batch_size = 100
 lr = 0.01
-epoch = 2
+epoch = 4
 img_number = 4
 PATH = '/home/wataru/ML_summer_projects/CNN/save'
 
@@ -67,8 +67,8 @@ print(' '.join('%5s' % classes[labels[j]] for j in range(img_number)))
 plt.show()
 ##### Define model, loss function, and optimizer
 model = CNN()
-optimizer = optim.SGD(model.parameters(), lr=lr)
-criterion = nn.NLLLoss()
+optimizer = optim.Adagrad(model.parameters(), lr=lr)
+criterion = nn.CrossEntropyLoss()
 
 ## Print out the model info
 print('*'*10, 'Model Info', '*'*10, '\n', model, '\n')
