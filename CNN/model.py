@@ -14,15 +14,16 @@ class CNN(nn.Module):
         super(CNN, self).__init__()
 
         # defining the params for the model
-        fil_num1 = 50 
-        fil_num = 20
+        fil_num1 = 64 
+        fil_num = 32
         # Defining layers needed
         self.conv1 = nn.Conv2d(1, fil_num1, kernel_size=3) #(input_depth, # of fileters)
-        self.conv2 = nn.Conv2d(fil_num1, 35, kernel_size=3)
-        self.conv3 = nn.Conv2d(35, fil_num, kernel_size=3)
+        self.conv2 = nn.Conv2d(fil_num1, fil_num1, kernel_size=3)
+        self.conv3 = nn.Conv2d(fil_num1, fil_num, kernel_size=3)
         self.mp = nn.MaxPool2d(2) # maxpool layer
-        self.dense1 = nn.Linear(875, 200) # number of class is 10
-        self.dense2 = nn.Linear(200, 10) # number of class is 10
+        self.dense1 = nn.Linear(1600, 512) # number of class is 10
+        self.dense2 = nn.Linear(512, 128) # number of class is 10
+        self.dense3 = nn.Linear(128, 10)
 
 
     # forward pass
@@ -48,9 +49,9 @@ class CNN(nn.Module):
         #print('shape of out: ', out.shape)
 
         ## 2 dense layers with leaky ReLU
-        out = self.dense1(out)
-        out = F.leaky_relu(out)
-        out = self.dense2(out)
-        out = F.leaky_relu(out)
+        out = F.leaky_relu(self.dense1(out))
+        out = F.leaky_relu(self.dense2(out))
+        out = F.leaky_relu(self.dense3(out))
+
         return out
 
