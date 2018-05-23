@@ -15,8 +15,8 @@
 
 #### Training tools/parameters
 - Loss: CrossEntropyLoss
-- epoch: 7 loops
+- epoch: 10 loops
 - optimizer: Adagrad
 
 #### Result
-- Test set acc: 90%, avg loss: 0.0027, 7 epochs
+- Test set acc: 91%, avg loss: 0.0026, 10 epochs
