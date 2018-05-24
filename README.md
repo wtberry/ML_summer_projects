@@ -13,3 +13,9 @@ Machine learning algorithm implementations, using python ML libraries.
 - Long Short Term Memory
 - Reinforcement Learning of sort
 - etc... to be added more..
+
+#### Currently working on...
+- NLP tutorial
+
+#### Done so far...
+- CNN with fashionMNIST
