@@ -21,7 +21,7 @@ import numpy as np
 ##### Setting up parameters
 batch_size = 100
 lr = 0.01
-epoch = 4
+epoch = 11
 img_number = 4
 PATH = '/home/wataru/ML_summer_projects/CNN/save'
 
