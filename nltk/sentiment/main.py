@@ -81,14 +81,14 @@ lstm = LSTM(num_classes, input_size, hidden_size, num_layers)
 
 # Loss and optimizer
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(lstm.parameters(), lr=lr)
+optimizer = torch.optim.SGD(lstm.parameters(), lr=lr)
 
 
 ##### Defining Utility Functions #####
 
 def set_log():
     log_path = '/home/wataru/ML_summer_projects/nltk/sentiment/log/'
-    log_dir = log_dir= 'PCA' + str(pca_comp) +  '_layer_'+ str(num_layers)+ '_memory' + str(hidden_size) + '_lr_'+str(lr)+'_epoch_'+str(num_iter) + 'optim' + str(optimizer).split(' ')[0]
+    log_dir = log_dir= 'PCA' + str(pca_comp) +  '_layer_'+ str(num_layers)+ '_memory_' + str(hidden_size) + '_lr_'+str(lr)+'_epoch_'+str(num_iter) + '_optim_' + str(optimizer).split(' ')[0]
     logger = Logger(log_path + log_dir)
     return logger, log_path, log_dir
 
