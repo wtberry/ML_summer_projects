@@ -7,6 +7,8 @@ import torch.nn as nn
 from torch.autograd import Variable
 from torch.utils.data import TensorDataset, DataLoader
 
+import matplotlib.pyplot as plt
+
 
 '''
 LSTM for natural language processing, sentiment analysis using
@@ -22,17 +24,19 @@ seq_len = 1000
 data = reviews(seq_len)
 num_classes = 2
 input_size = data.input_size
-hidden_size = 64
+hidden_size = 32 
 num_layers = 1
 
 
-valid_percentage = 10
-train_percentage = 70
+
+valid_percentage = 0
+train_percentage = 90
+pca_comp = 20
 
 batch_size = 100
 
 lr = 0.03
-num_iter = int(2e+2)
+num_iter = int(1e+4)
 
 
 ##### Data Loading and Prep #####
@@ -40,7 +44,11 @@ X = data.X
 y = data.y
 
 ## normalize X
-X = data.normalize(X)
+#X = data.normalize(X)
+
+## Applying PCA
+X = data.pca(X, pca_comp)
+print('X after PCA: ', X.shape)
 
 # Split the data into train, valid, and test set
 data_dict = data.data_split(train_perc=train_percentage, valid_perc=valid_percentage, X=X, y=y)
@@ -65,22 +73,24 @@ test_loader = DataLoader(test_set, batch_size=batch_size, drop_last=True)
 
 
 ##### Set up the Logger #####
-log_path = '/home/wataru/ML_summer_projects/nltk/sentiment/log/'
-log_dir = log_dir= 'layer_'+ str(num_layers)+'_lr_'+str(lr)+'_epoch_'+str(num_iter)
-logger = Logger(log_path + log_dir)
 
 
 ##### Instantiate the LSTM and Prep for Training #####
 # model
 lstm = LSTM(num_classes, input_size, hidden_size, num_layers)
-print(lstm)
 
 # Loss and optimizer
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(lstm.parameters(), lr=lr)
+optimizer = torch.optim.Adam(lstm.parameters(), lr=lr)
 
 
 ##### Defining Utility Functions #####
+
+def set_log():
+    log_path = '/home/wataru/ML_summer_projects/nltk/sentiment/log/'
+    log_dir = log_dir= 'PCA' + str(pca_comp) +  '_layer_'+ str(num_layers)+ '_memory' + str(hidden_size) + '_lr_'+str(lr)+'_epoch_'+str(num_iter) + 'optim' + str(optimizer).split(' ')[0]
+    logger = Logger(log_path + log_dir)
+    return logger, log_path, log_dir
 
 def to_np(x):
     return x.data.cpu().numpy()
@@ -112,18 +122,33 @@ def test():
         correct += pred.eq(target.data.view_as(pred)).cpu().sum()
     
     test_loss /= len(test_loader.dataset)
+    acc = 100. * correct / len(test_loader.dataset)
     print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-        test_loss, correct, len(test_loader.dataset),
-        100. * correct / len(test_loader.dataset)))
-    return test_loss
+        test_loss, correct, len(test_loader.dataset), acc))
+    return test_loss, acc
 
-print('seq_length: ', seq_len)
-print('# of features:', input_size)
-print('batch_size: ', batch_size)
+def print_params():
+
+    # Print model info
+    print('*'*10, 'model info', '*'*10)
+    print('Num of layers: ', num_layers)
+    print('seq_length: ', seq_len)
+    print('# of features:', input_size)
+    print('batch_size: ', batch_size)
+    print(lstm)
+
+    # Print training info
+    print('*'*10, 'training info', '*'*10)
+    print('Learning rate: ', lr)
+    print('optimizer: ', str(optimizer).split(' ')[0])
 
 
 ##### Training #####
+# making function calls
+logger, _, _ = set_log()
+print_params()
 lstm.train()
+
 epoch = 0
 while epoch < num_iter:
     for (data, target) in train_loader:
@@ -139,7 +164,7 @@ while epoch < num_iter:
 	    
             epoch +=1
 
-            if (epoch+1)%10==0:
+            if (epoch+1)%100==0:
 
                 # printing out accuracyy
                 prediction = outputs.max(dim=1, keepdim=True)[1]
@@ -168,7 +193,7 @@ while epoch < num_iter:
                     logger.histo_summary(tag+'/grad', to_np(value.grad), epoch+1)
 
             ################ call Test?? #####
-            if (epoch+1)%10==0:
+            if (epoch+1)%500==0:
                 '''
                 # make test prediction
                 test_out = lstm(X_test)
@@ -178,9 +203,10 @@ while epoch < num_iter:
                 print("predicted value: ", test_out.data[0])
                 print("label value:     ", y_test.data[0])
                 '''
-                test_loss = test()
+                test_loss, accuracy = test()
                 info = {
-                        'test loss': test_loss.item()
+                        'test loss': test_loss.item(),
+                        'test accuracy': accuracy.item()
                         }
 
                 for tag, value in info.items():

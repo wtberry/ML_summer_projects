@@ -3,6 +3,7 @@ from gensim.models import Word2Vec
 from gensim import models
 import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.decomposition import PCA
 
 
 class reviews():
@@ -109,3 +110,14 @@ class reviews():
         x_min = X.min(axis=(1, 2), keepdims=True)
         x_max = X.max(axis=(1, 2), keepdims=True)
         return (X - x_min)/(x_max - x_min)
+
+    @staticmethod
+    def pca(X, comp):
+        pca = PCA(n_components=comp)
+        result = np.zeros((X.shape[0], comp, X.shape[-1]))
+        print('Applying PCA...')
+
+        for row in range(X.shape[0]):
+            result[row, :, :] = pca.fit_transform(X[row, :, :].T).T
+        
+        return result
