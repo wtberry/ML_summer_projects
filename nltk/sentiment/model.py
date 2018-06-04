@@ -18,8 +18,8 @@ class LSTM(nn.Module):
         self.num_classes = num_classes
         self.hidden_size = hidden_size
 
-        self.conv1 = nn.Conv1d(input_size, input_size, kernel_size=6, stride=2)
-        self.mp = nn.MaxPool1d(2)
+        #self.conv1 = nn.Conv1d(input_size, input_size, kernel_size=6, stride=2)
+        #self.mp = nn.MaxPool1d(2)
         self.lstm1 = nn.LSTM(input_size=input_size, hidden_size=hidden_size, num_layers=num_layers, batch_first=True)
 
         # Linear/ normal Neural Network layer on top of LSTM
@@ -29,17 +29,17 @@ class LSTM(nn.Module):
 
     def forward(self, x):
         # reshape data for convolution
-        batch_size = x.shape[0]
-        x = x.view(batch_size, self.input_size, -1)
-        
-        ### Convolutional Layers ###
-        c1 = self.conv1(x)
-        mp1 = F.leaky_relu(self.mp(c1))
-        c2 = self.conv1(mp1)
-        mp2 = F.leaky_relu(self.mp(c2))
+        #batch_size = x.shape[0]
+        #x = x.view(batch_size, self.input_size, -1)
+        #
+        #### Convolutional Layers ###
+        #c1 = self.conv1(x)
+        #mp1 = F.leaky_relu(self.mp(c1))
+        #c2 = self.conv1(mp1)
+        #mp2 = F.leaky_relu(self.mp(c2))
 
-        # reshape again for LSTM
-        mp2 = mp2.view(batch_size, -1, self.input_size)
+        ## reshape again for LSTM
+        #mp2 = mp2.view(batch_size, -1, self.input_size)
         #print('mp2: ', mp2.shape)
 
         ### LSTM Layers ###
@@ -49,7 +49,7 @@ class LSTM(nn.Module):
         # Propagate input through RNN
         # Input: (batch, seq_len, input_size)
         # h_0: (batch, num_layers * num_directions, hidden_size)
-        out, _ = self.lstm1(mp2, h_1)
+        out, _ = self.lstm1(x, h_1)
         # adding up the output sequences
         out_sum = out.sum(dim=1)
         #print(out.shape)
