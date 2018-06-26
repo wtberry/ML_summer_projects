@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -17,7 +18,7 @@ https://heartbeat.fritz.ai/basics-of-image-classification-with-pytorch-2f8973c51
 class CUnit(nn.Module):
 
     def __init__(self, in_channels, out_channels, kernel_size=5, stride=1, batch_norm=True):
-        super(Unit, self).__init__()
+        super(CUnit, self).__init__()
         pass
 
         self.conv = nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride)
@@ -58,7 +59,8 @@ class Discriminator(nn.Module):
 
         # batch_norm https://discuss.pytorch.org/t/example-on-how-to-use-batch-norm/216/2
        
-        self.avp= nn.AvgPool2d(4)
+        ### Change nn.AvgPool2d(x), x to 3 if MNIST, 4 for CIFAR10
+        self.avp= nn.AvgPool2d(4) 
         self.softmax = nn.Softmax(dim=1)
         #self.conv1 = nn.Conv2d()
 
@@ -85,22 +87,23 @@ class Discriminator(nn.Module):
         avg = self.avp(x) # (batch x channel x 1 x 1)
         #print('avg', avg.shape)
         avg = avg.view(-1, self.num_classes) # (batch x classes)
-        # softmax
-        out = self.softmax(avg)
+        # softmax and reshape into label shape
+        # has to be max()[0], for it to have grad for backprop
+        out = self.softmax(avg).max(dim=1, keepdim=True)[0]
         #print('out', out.shape)
         return out
 
 
 class FUnit(nn.Module):
 
-    def __init__(self, in_channels, out_channels, kernel_size=5, stride=1, out_layer=False):
-        super(Unit, self).__init__()
+    def __init__(self, in_channels, out_channels, kernel_size=5, stride=2, padding=2, out_padding=1, out_layer=False):
+        super(FUnit, self).__init__()
         pass
 
-        self.fconv = nn.ConvTranspose2d(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride)
+        self.fconv = nn.ConvTranspose2d(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride, padding=padding, output_padding=out_padding)
         self.bn = nn.BatchNorm2d(num_features=out_channels)
         self.relu = nn.ReLU()
-        self.tanh = nn.tanh()
+        self.tanh = nn.Tanh()
 
     def forward(self, inp, out_layer=False):
         out = self.fconv(inp)
@@ -121,23 +124,25 @@ https://towardsdatascience.com/types-of-convolutions-in-deep-learning-717013397f
 class Generator(nn.Module):
 
 
-    def __init__(self, image_size, hidden_size, latent_size):
-        super(Generator, selfe).__init__()
+    def __init__(self, image_depth, latent_size):
+        super(Generator, self).__init__()
 
-        self.image_size = image_size
-        self.hidden_size = hidden_size
         self.latent_size = latent_size
-
-        self.unit1 = FUnit(in_channels=512, out_channels=256)
-        self.unit2 = FUnit(in_channels=256, out_channels=128)
-        self.unit3 = FUnit(in_channels=128, out_channels=64)
-        self.unit4 = FUnit(in_channels=64, out_channels=32, out_layer=True)
+        self.dense = nn.Linear(self.latent_size, 512*4*4)
+        self.unit1 = FUnit(in_channels=512, out_channels=256, padding=2, out_padding=1) # (8x8)
+        self.unit2 = FUnit(in_channels=256, out_channels=128) # (16x16)
+        self.unit3 = FUnit(in_channels=128, out_channels=image_depth, out_layer=True) #(32x32)
 
     def forward(self, x):
-        # some projection and stuff here
-        x = unit1(x)
-        x = unit2(x)
-        x = unit3(x)
-        x = unit4(x)
-        return = out
-'''
+        # some projection and reshaping of uniform distro, using dense layer
+        proj  = self.dense(x) 
+        x = proj.reshape(-1, 512, 4, 4)
+        #print('x', x.shape)
+        x = self.unit1(x)
+        #print('x1', x.shape)
+        x = self.unit2(x)
+        #print('x2', x.shape)
+        out = self.unit3(x)
+        #print('Gen_out', out.shape)
+
+        return out
