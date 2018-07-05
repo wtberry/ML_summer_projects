@@ -1,9 +1,9 @@
 '''
-ALL_CNN main script, you can choose either 
-- FashionMNIST 
+ALL_CNN main script, you can choose either
+- FashionMNIST
 - CIPAR10
 images dataset, to try the model
-set up 
+set up
 importing model, model paprameters, and image_depth (channels)
 '''
 
@@ -26,12 +26,12 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Hyper Parameters
 latent_size = 64 #what's this??
-lr = 0.04 #0.25, 0.01, 0.05, , 
-#hidden_size = 256 
+lr = 0.04 #0.25, 0.01, 0.05, ,
+#hidden_size = 256
 image_size = 32# for whatever image's hight and witdh
 num_epochs = 50
 num_classes = 10
-batch_size = 64 
+batch_size = 64
 image_depth = 3
 sample_dir = 'CIFAR10_sample' # Forlder for data or log??
 
@@ -47,7 +47,7 @@ if not os.path.exists(sample_dir):
 
 # Image processing
 # https://pytorch.org/docs/stable/torchvision/transforms.html
-# transforms.Normalize(mean=(), std=()) normalize image with given means and 
+# transforms.Normalize(mean=(), std=()) normalize image with given means and
 # standard div, one value for each channel, here 3 for RBG
 transform = transforms.Compose([ # transforms.Compose, list of transforms to perform
                 transforms.RandomHorizontalFlip(p=0.5),
@@ -144,7 +144,7 @@ def evaluate(mode, num):
 
 #### Start Training ####
 # num of batches in the total dataset, here 60000/100
-total_step = len(train_loader) 
+total_step = len(train_loader)
 
 count = 0
 for epoch in range(num_epochs): # How many times to go through the dataset
@@ -153,7 +153,7 @@ for epoch in range(num_epochs): # How many times to go through the dataset
         count += 1
         # i: index num for the for loop
         # images: image matrix, size(batch x channels x 28 x 28)
-        # _ : label, 0~9, size (batch,) 
+        # _ : label, 0~9, size (batch,)
         images = images.reshape(batch_size, image_depth, image_size, image_size).to(device) # reshape and set to cuda/cpu
 
         ### Create the labels which are later used as input for the BCE loss
@@ -164,7 +164,7 @@ for epoch in range(num_epochs): # How many times to go through the dataset
 
         ######## Train the Discriminator #########
 
-        # Compute BCELoss using real images 
+        # Compute BCELoss using real images
         # Second term of the loss is always zero since real_labels == 1.. WHY??
         outputs = D(images) # using real data
         loss = criterion(outputs, labels)
@@ -185,7 +185,7 @@ for epoch in range(num_epochs): # How many times to go through the dataset
         optimizer.step()
 
         ##### Train the Generator ######
-        
+
         # compute loss with fake images
         #z = torch.randn(batch_size, latent_size).to(device) # generate random noise
         #fake_images = G(z) # making fake images
@@ -204,7 +204,7 @@ for epoch in range(num_epochs): # How many times to go through the dataset
             print('i+1', i+1, ' Lr:', lr)
 
 
-        ##### Tensorboard Logging ##### 
+        ##### Tensorboard Logging #####
         if i % 10 == 0:
             # 1. Log scalar values (scalar summary)
             info = {'loss':loss.item()}
@@ -233,5 +233,3 @@ for epoch in range(num_epochs): # How many times to go through the dataset
 
 # Save the model checkpoints
 torch.save(D.state_dict(), os.path.join(sample_dir, 'D.ckpt'))
-    
-
