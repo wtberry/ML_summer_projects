@@ -10,6 +10,6 @@
 - main_MNIST.py: plain GAN, using MNIST
 
 ### Models
-- all_CNN_model.py: all_CNN model
-- DCGAN_model.py: DCGAN model, using all_CNN
+- all_CNN_model.py: all_CNN model, fancy CNN based on the paper
+- DCGAN_model.py: DCGAN model, using all_CNN above
 - model.py: plain fully connected GAN
