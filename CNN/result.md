@@ -1,5 +1,7 @@
 ## Models and thier results
 
+* Using FashionMNIST data
+
 ### CNN
  	* Loss: CrossEntropyLoss
  	* Conv layers: 2

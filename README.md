@@ -9,7 +9,7 @@ Machine learning algorithm implementations, using python ML libraries.
 - Tensorflow maybe??
 
 #### Potential Toy Problems
-- Convolutional Neural Netowrk on FashionMNIST dataset
+- DONE: with youtube tutorial in /CNN; Convolutional Neural Netowrk on FashionMNIST dataset
 - Long Short Term Memory
 - Reinforcement Learning of sort
 - etc... to be added more..
