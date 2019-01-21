@@ -34,7 +34,7 @@ num_epochs = 300
 num_classes = 2
 batch_size = 100
 image_depth = 3
-sample_dir = 'fashionMNIST_samples_CNN' # Forlder for data or log??
+sample_dir = 'fashionMNIST_samples_CNN' # log folder for sample/fake images and saved models
 
 
 # Create a directory if not exist
@@ -42,7 +42,7 @@ if not os.path.exists(sample_dir):
     os.makedirs(sample_dir)
 
 
-# Image processing
+###### Image processing ########
 # https://pytorch.org/docs/stable/torchvision/transforms.html
 # transforms.Normalize(mean=(), std=()) normalize image with given means and 
 # standard div, one value for each channel, here 3 for RBG
@@ -50,17 +50,23 @@ transform = transforms.Compose([ # transforms.Compose, list of transforms to per
                 transforms.ToTensor(),
                 transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))])
 #
+#
+#
+######## Preping data and data_loader ###########
+
 # MNIST dataset
 #dataset = torchvision.datasets.FashionMNIST(root='data/', # where at??
 #                                   train=True,
 #                                   transform=transform, # pass the transform  we made
 #                                   download=True)
 
+## CIFAR10 
 dataset = torchvision.datasets.CIFAR10(root='CIFAR10_data/', # where at??
                                    train=True,
                                    transform=transform, # pass the transform  we made
                                    download=True)
-# Data Loader
+
+### # Data Loader ####
 data_loader = torch.utils.data.DataLoader(dataset=dataset,
                                           batch_size=batch_size,
                                           shuffle=True)
