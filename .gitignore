@@ -1,2 +1,2 @@
 *.tfevents.*
-nlp/sentiment/*
+nlp/sentiment/
