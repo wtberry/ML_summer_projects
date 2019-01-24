@@ -5,3 +5,5 @@
 - [FashionMNIST dataset](https://github.com/zalandoresearch/fashion-mnist)
 > FashionMNIST dataset is 'fashion version' of MNIST dataset. It includes various outfits pictures from Zalando. 
 More versatile than MNIST, and this dataset is closer to real life senario of ML usage.
+
+* Experimenting with 3 different architecture, refer to result.md

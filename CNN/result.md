@@ -1,5 +1,6 @@
 ## Models and thier results
 
+* each models on different branches
 * Using FashionMNIST data
 
 ### CNN
