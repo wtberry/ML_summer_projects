@@ -1,4 +1,6 @@
-### Tutorial and experiments with GAN
+### Tutorial and experiments with GAN & CNN
+
+GAN and CNN were experimented in this directory, for the All Convolutional Net and DCGAN(Deep Convolutional Generative Adversarial Networks)
 
 - tutorial on github, about GAN using pytorch
  https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/03-advanced/generative_adversarial_network/main.py#L41-L57
