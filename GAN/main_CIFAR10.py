@@ -66,7 +66,7 @@ dataset = torchvision.datasets.CIFAR10(root='CIFAR10_data/', # where at??
                                    transform=transform, # pass the transform  we made
                                    download=True)
 
-### # Data Loader ####
+#### Data Loader ####
 data_loader = torch.utils.data.DataLoader(dataset=dataset,
                                           batch_size=batch_size,
                                           shuffle=True)

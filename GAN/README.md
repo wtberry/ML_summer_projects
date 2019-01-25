@@ -9,7 +9,6 @@ adversarial networks
 - STRIVING FOR SIMPLICITY: THE ALL CONVOLUTIONAL NET
 - Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift
 
-
 ### main files
 - main_CIFAR10.py: DCGAN using CIFAR10 training script
 - main_FashionMNIST.py: DCGAN using fashionMNIST dataset

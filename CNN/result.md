@@ -1,8 +1,11 @@
 ## Models and thier results
 
+<<<<<<< HEAD
 * each models on different branches
 * Using FashionMNIST data
 
+=======
+>>>>>>> 7e600e99a07187fbd4a3b05005f0044347c42491
 ### CNN
  	* Loss: CrossEntropyLoss
  	* Conv layers: 2
