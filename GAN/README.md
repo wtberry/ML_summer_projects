@@ -13,7 +13,7 @@ adversarial networks
 
 ### main files
 - main_CIFAR10.py: DCGAN using CIFAR10 training script
-- main_FashionMNIST.py: DCGAN using fashionMNIST dataset
+- main_FashionMNIST.py: plain GAN using fashionMNIST dataset
 - main_CNN.py: all_CNN training using CIFAR10
 - main_MNIST.py: plain GAN, using MNIST
 
